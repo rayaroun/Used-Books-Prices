@@ -1,4 +1,3 @@
-#Git - git remote add UsedBooks https://github.com/rayaroun/Used-Books-Prices.git
 
 import csv
 from bs4 import BeautifulSoup   
