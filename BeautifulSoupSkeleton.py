@@ -1,4 +1,5 @@
 import csv
+import re
 import requests
 from bs4 import BeautifulSoup   
 from selenium import webdriver
@@ -11,7 +12,7 @@ class scraper:
 
     def __init__(self,isbn : str) -> None:
         self.isbn = isbn
-        self.driver = webdriver.Chrome(options=chrome_options)
+        # self.driver = webdriver.Chrome(options=chrome_options)
         print(self.isbn)
 
 
@@ -23,34 +24,46 @@ class scraper:
 
         self.url =  template.format(self.isbn)
         print(self.url)
-        self.driver.get(self.url)
+
+        
+
+
+        # self.driver.get(self.url)
         return self.url
 
 
 
     def get_used_books_link(self):
 
+        # html = requests.get(url)
 
-        self.soup = BeautifulSoup(self.driver.page_source,'html.parser')
 
-        self.results = self.soup.find_all('span', {'class' : 'a-declarative'})
+        with open('webtxt.html', 'r') as f:
 
-        print(self.results)
+            contents = f.read()
+
+
+        soup = BeautifulSoup(contents,'html.parser')
+
+
+
+        self.results = soup.find("a", string=re.compile("offers"))
+
+        return self.results
+
+
+
+    def get_used_prices_from_link(self):
+
+        with open('webtxt.html', 'r') as f:
+
+            contents = f.read()
+
 
 
     
-    def get_soup(self,url):
-        response = requests.get(url)
-        if response.ok:
-            return BeautifulSoup(response.text, features="html.parser")
 
-    def get_links(self,soup):
-        links = []
-        for tag in soup.findAll("a", href=True):
-            if img := tag.img:
-                img = img.get("src")
-            links.append(dict(url=tag.get("href"), text=tag.text, img=img))
-        return links
+
 
         
 
@@ -64,5 +77,16 @@ class scraper:
 
 khushwant = scraper("978-0195626438")
 url = khushwant.get_url()
-khushwant.get_used_books_link()
+link_results = khushwant.get_used_books_link()
+
+
+# The following gets the page where the used prices are listed
+# (link_results['href']) 
+
+#saving the page manually for now and opening it here 
+
+
+
+
+
 
