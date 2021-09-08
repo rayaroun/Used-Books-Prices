@@ -4,8 +4,11 @@ import requests
 from bs4 import BeautifulSoup   
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-chrome_options = Options() 
-chrome_options.add_experimental_option("detach", True)
+import time
+
+
+# chrome_options = Options() 
+# chrome_options.add_experimental_option("detach", True)
 
 class scraper: 
 
@@ -55,12 +58,20 @@ class scraper:
 
     def get_used_prices_from_link(self):
 
-        with open('webtxt.html', 'r') as f:
+        # with open('usedpagelink.html', 'r') as f:
 
+        #     contents = f.read()
+
+        with open('usedpagelink.html', encoding="utf8") as f:
             contents = f.read()
+        
+        soup = BeautifulSoup(contents,'html.parser')
+
+        div_results_condition = soup.find_all("div",{"id": "aod-offer-heading"})
+        div_results_price = soup.find_all( "div",{"id": "aod-offer-heading"} )
 
 
-
+        print(div_results_condition['h5'])
     
 
 
@@ -78,6 +89,8 @@ class scraper:
 khushwant = scraper("978-0195626438")
 url = khushwant.get_url()
 link_results = khushwant.get_used_books_link()
+time.sleep(3)
+khushwant.get_used_prices_from_link()
 
 
 # The following gets the page where the used prices are listed
