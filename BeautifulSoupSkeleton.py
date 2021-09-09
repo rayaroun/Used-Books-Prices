@@ -7,14 +7,16 @@ from selenium.webdriver.chrome.options import Options
 import time
 
 
-# chrome_options = Options() 
-# chrome_options.add_experimental_option("detach", True)
+chrome_options = Options() 
+chrome_options.add_experimental_option("detach", True)
 
 class scraper: 
-
-
     def __init__(self,isbn : str) -> None:
         self.isbn = isbn
+        self.condition_array = []
+        self.price_array = []
+        self.condition_price_dict = {}
+
         # self.driver = webdriver.Chrome(options=chrome_options)
         print(self.isbn)
 
@@ -68,10 +70,24 @@ class scraper:
         soup = BeautifulSoup(contents,'html.parser')
 
         div_results_condition = soup.find_all("div",{"id": "aod-offer-heading"})
-        div_results_price = soup.find_all( "div",{"id": "aod-offer-heading"} )
+        div_results_price = soup.find_all( "span",{"class": "a-price-whole"} )
 
+       
+        # for x in div_results_condition:
+            # tempCondition = x.text.strip().split()
+            # key = " ".join(tempCondition)
 
-        print(div_results_condition['h5'])
+        for condition,price in div_results_condition , div_results_price:
+            tempCondition = condition.text.strip().split()
+            key = " ".join(tempCondition)
+
+            value = int(price.text.rstrip('.'))
+
+            self.condition_price_dict[key].append(value)
+
+        print()
+        #     self.condition_price_dict[]
+            # print(x.text.rstrip('.'))
     
 
 
